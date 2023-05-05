@@ -11,13 +11,13 @@ const validator = (req, res, next) => {
             req.userId = user.id;
         }
         else {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({ message: 'Unauthorized access!' });
         }
         next();
 
     } catch (error) {
         console.log(error);
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: 'Unauthorized access!' });
     }
 }
 

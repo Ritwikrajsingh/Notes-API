@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema({ // This is the schema for the notes collection
     title: {
         type: String,
-        required: true,
+        // requir   ed: true,
     },
     description: {
         type: String,
