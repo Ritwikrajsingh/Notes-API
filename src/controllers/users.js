@@ -19,7 +19,7 @@ const register = async (req, res) => {
             return res.status(409).json({ message: 'User already exists!' });
         }
 
-        // Password hashing
+        // Password hashing 
         const hashedPassword = await bcrypt.hash(password, 8) // 8 is the number of rounds (AKA salt), the algorithm will use to hash the password
 
         // User creation
@@ -32,7 +32,11 @@ const register = async (req, res) => {
         console.log(newUser);
 
         // User token generation
-        const token = jwt.sign({ email: newUser.email, username: newUser.username, id: newUser._id }, SECRET_KEY) // This will generate a token whick contains a payload (email and id) and a secret key
+        const token = jwt.sign({
+            email: newUser.email,
+            username: newUser.username,
+            id: newUser._id
+        }, SECRET_KEY) // This will generate a token whick contains a payload (email and id) and a secret key
 
         res.status(201).json({ token })
 
@@ -58,21 +62,23 @@ const login = async (req, res) => {
             return res.status(404).json({ message: 'User not found!' });
         }
 
-        // console.log(existingUser);
-
         // Valid password check
         const validPassword = await bcrypt.compare(password, existingUser.password);
 
         if (!validPassword) {
-            return res.status(400).json({ message: 'Incorrect password!' });
+            return res.status(401).json({ message: 'Incorrect password!' });
         }
 
         console.log(validPassword, `password is valid!`);
 
         // User token generation
-        const token = jwt.sign({ email: existingUser.email, username: existingUser.username, id: existingUser._id }, SECRET_KEY) // Same as in register
+        const token = jwt.sign({
+            email: existingUser.email,
+            username: existingUser.username,
+            id: existingUser._id
+        }, SECRET_KEY) // Same as in register
+
         console.log(token);
-        // console.log(jwt.decode(token));
 
         res.status(200).json({ token })
 
