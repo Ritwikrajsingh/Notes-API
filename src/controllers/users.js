@@ -7,6 +7,11 @@ const { SECRET_KEY } = process.env;
 const register = async (req, res) => {
     const { username, password, email } = req.body;
 
+    // Check if all required fields are present
+    if (!username || !password || !email) {
+        return res.status(400).json({ message: "Missing required field(s)" })
+    }
+
     try {
         // Existing user check
         const existingUser = await model.findOne({ email });
