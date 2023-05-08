@@ -110,7 +110,7 @@ const deleteNote = async (req, res) => {
         }
 
         // Check if user is authorized to delete the note
-        if (note.userId !== req.userId) {
+        if (note.userId != req.userId) {
             return res.status(403).json({ message: "Unauthorized access!" });
         }
 

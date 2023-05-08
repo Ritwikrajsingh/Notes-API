@@ -57,7 +57,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'Incorrect password' });
         }
 
-        console.log(validPassword, `password is a valid!`);
+        console.log(validPassword, `password is valid!`);
 
         // User token generation
         const token = jwt.sign({ email: existingUser.email, username: existingUser.username, id: existingUser._id }, SECRET_KEY) // Same as in register
