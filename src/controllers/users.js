@@ -9,14 +9,14 @@ const register = async (req, res) => {
 
     // Check if all required fields are present
     if (!username || !password || !email) {
-        return res.status(400).json({ message: "Missing required field(s)" })
+        return res.status(400).json({ message: "Missing required field(s)!" })
     }
 
     try {
         // Existing user check
         const existingUser = await model.findOne({ email });
         if (existingUser) {
-            return res.status(409).json({ message: 'User already exists' });
+            return res.status(409).json({ message: 'User already exists!' });
         }
 
         // Password hashing
@@ -38,13 +38,18 @@ const register = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Oops! something went wrong" })
+        res.status(500).json({ message: "Oops! something went wrong." })
     }
 
 }
 
 const login = async (req, res) => {
     const { email, password } = req.body;
+
+    // Check if all required fields are present
+    if (!email || !password) {
+        return res.status(400).json({ message: "Missing required field(s)!" })
+    }
 
     try {
         // Existing user check
@@ -59,7 +64,7 @@ const login = async (req, res) => {
         const validPassword = await bcrypt.compare(password, existingUser.password);
 
         if (!validPassword) {
-            return res.status(400).json({ message: 'Incorrect password' });
+            return res.status(400).json({ message: 'Incorrect password!' });
         }
 
         console.log(validPassword, `password is valid!`);
