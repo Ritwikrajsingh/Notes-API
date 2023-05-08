@@ -27,7 +27,7 @@ const register = async (req, res) => {
         console.log(newUser);
 
         // User token generation
-        const token = jwt.sign({ email: newUser.email, id: newUser._id }, SECRET_KEY) // This will generate a token whick contains a payload (email and id) and a secret key
+        const token = jwt.sign({ email: newUser.email, username: newUser.username, id: newUser._id }, SECRET_KEY) // This will generate a token whick contains a payload (email and id) and a secret key
 
         res.status(201).json({ user: newUser, token })
 
@@ -60,7 +60,7 @@ const login = async (req, res) => {
         console.log(validPassword, `password is a valid!`);
 
         // User token generation
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET_KEY) // Same as in register
+        const token = jwt.sign({ email: existingUser.email, username: existingUser.username, id: existingUser._id }, SECRET_KEY) // Same as in register
         console.log(token);
         // console.log(jwt.decode(token));
 
