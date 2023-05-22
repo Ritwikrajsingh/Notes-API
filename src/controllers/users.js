@@ -88,4 +88,18 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { register, login };
+const profile = async (req, res) => {
+    try {
+        // Existing user check
+        const user = await model.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Oops! something went wrong" })
+    }
+}
+
+module.exports = { register, login, profile };
