@@ -5,10 +5,10 @@ const model = require('../models/users');
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-    const { username, password, email } = req.body;
+    const { firstName, lastName, password, email } = req.body;
 
     // Check if all required fields are present
-    if (!username || !password || !email) {
+    if (!firstName || !password || !email) {
         return res.status(400).json({ message: "Missing required field(s)!" })
     }
 
@@ -16,7 +16,7 @@ const register = async (req, res) => {
         // Existing user check
         const existingUser = await model.findOne({ email });
         if (existingUser) {
-            return res.status(409).json({ message: 'User already exists!' });
+            return res.status(409).json({ message: 'User with this email already exists!' });
         }
 
         // Password hashing 
@@ -25,7 +25,8 @@ const register = async (req, res) => {
         // User creation
         const newUser = await model.create({
             email,
-            username,
+            firstName,
+            lastName: lastName || '',
             password: hashedPassword,
         })
 
@@ -34,7 +35,7 @@ const register = async (req, res) => {
         // User token generation
         const token = jwt.sign({
             email: newUser.email,
-            username: newUser.username,
+            name: newUser.lastName ? newUser.firstName + " " + newUser.lastName : newUser.firstName,
             id: newUser._id
         }, SECRET_KEY) // This will generate a token whick contains a payload (email and id) and a secret key
 
@@ -59,7 +60,7 @@ const login = async (req, res) => {
         // Existing user check
         const existingUser = await model.findOne({ email });
         if (!existingUser) {
-            return res.status(404).json({ message: 'User not found!' });
+            return res.status(404).json({ message: 'No registered user found with this email!' });
         }
 
         // Valid password check
@@ -74,7 +75,7 @@ const login = async (req, res) => {
         // User token generation
         const token = jwt.sign({
             email: existingUser.email,
-            username: existingUser.username,
+            name: existingUser.lastName ? existingUser.firstName + " " + existingUser.lastName : existingUser.firstName,
             id: existingUser._id
         }, SECRET_KEY) // Same as in register
 
@@ -95,7 +96,13 @@ const profile = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found!" });
         }
-        res.status(200).json(user);
+
+        const response = {
+            name: user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName,
+            email: user.email,
+            id: user._id
+        }
+        res.status(200).json(response);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Oops! something went wrong" })
