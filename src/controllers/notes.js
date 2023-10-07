@@ -33,7 +33,7 @@ const getNotes = async (req, res) => {
 
         // Case where no notes are found for the given user ID
         if (!notes || notes.length === 0) {
-            return res.status(204).json([]);
+            return res.status(201).json({ message: "Looks like you don't have any notes ye!" });
         }
 
         res.status(200).json(notes);
